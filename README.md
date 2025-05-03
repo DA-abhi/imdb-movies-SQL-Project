@@ -11,3 +11,16 @@
 #### The marketing team is specifically interested in evaluating the performance of their releases from the year 2014.
 #### They want to know how many movies released in 2014 fall under the 'Superhit' category to assess that year’s return on mid-tier investments.
 
+```Sql
+SELECT Count(*) AS ` ‘Superhit’ in the year 2014`
+FROM   (SELECT *,
+               CASE
+                 WHEN revenue_millions >= 300 THEN 'Blockbuster'
+                 WHEN revenue_millions BETWEEN 200 AND 299.99THEN 'Superhit'
+                 WHEN revenue_millions BETWEEN 100 AND 199.99 THEN 'Hit'
+                 ELSE 'Normal'
+               end AS 'Ratings'
+        FROM   imdb_movies
+        WHERE  year = 2014
+        HAVING `ratings` = 'Superhit') a;
+```
