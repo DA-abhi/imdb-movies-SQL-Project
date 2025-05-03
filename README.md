@@ -8,7 +8,7 @@ This project involves a comprehensive analysis of imdb movies data using SQL. Th
 * Ratings Analysis
 * Genre and Year-wise Insights
 * Cumulative Revenue Tracking
-* YoY (Year-over-Year) and Growth Metrics:
+* YoY (Year-over-Year) and Growth Metrics
 
 
 ##  Business Problem and Solutions
