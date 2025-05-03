@@ -24,3 +24,4 @@ FROM   (SELECT *,
         WHERE  year = 2014
         HAVING `ratings` = 'Superhit') a;
 ```
+**Objective:** To determine the number of 'Superhit' movies released in the year 2014 by classifying films based on their revenue using a CASE WHEN logic.
