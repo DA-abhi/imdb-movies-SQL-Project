@@ -60,3 +60,187 @@ FROM   (SELECT *,
 WHERE Ratings = 'Must Watch';
 ```
 **Objective:** To determine the total number of 'Must Watch' movies (rating ≥ 8) in the dataset for use in content recommendation and promotional strategy.
+#### 4. evaluate the financial performance of lower-rated movies (ratings < 7) to better understand their impact. Specifically, they aim to analyze total revenue by year and genre, and determine the total revenue of 'Drama' movies with ratings below 7 in 2016 to assess that genre’s underperforming content.
+```sql
+SELECT Genre, year,Sum(revenue_millions)
+FROM imdb_movies
+WHERE Rating < 7
+AND YEAR = 2016
+AND Genre = 'Drama'
+GROUP BY 1,2
+ORDER BY 2 asc;
+```
+**Objective:** To calculate the total revenue of 'Drama' movies with ratings below 7 in 2016 by analyzing revenue across year and genre for low-rated films.
+#### 5. To assess the performance of different genres, the company wants to identify how much revenue the 'Comedy' genre contributed to the total movie revenue in the year 2016. This will help guide future investment decisions in genre-based content.
+```sql
+SELECT C.genre,
+       Sum(rp) AS `revenue contribution`
+FROM   (SELECT a.genre,
+               Round(( revenue_millions * 100 / rm ), 2) AS RP
+        FROM   imdb_movies a
+               INNER JOIN (SELECT genre,
+                                  Sum(revenue_millions) AS RM
+                           FROM   imdb_movies
+                           GROUP  BY 1) b
+                       ON a.genre = b.genre
+        WHERE  year = '2016'
+               AND a.genre = 'Comedy') c
+GROUP  BY 1; 
+```
+**Objective:** To compute the revenue contribution of the 'Comedy' genre to the total movie revenue in 2016 for genre-level performance analysis.
+
+#### 6. calculate revenue contribution of ‘The Avengers’ within the 'Action' genre in 2012, to evaluate the significance of blockbuster titles in overall genre revenue.
+```sql
+SELECT a.genre,
+       a.title,
+       Round(( revenue_millions * 100 / rm ), 2) AS `revenue contribution`
+FROM   imdb_movies a
+       INNER JOIN (SELECT genre,
+                          Sum(revenue_millions) AS rm
+                   FROM   imdb_movies
+                   GROUP  BY 1) b
+               ON a.genre = b.genre
+WHERE  a.genre = 'Action'
+       AND year = 2012
+       AND title = 'The Avengers' ;
+```
+**Objective:** To determine how much revenue ‘The Avengers’ contributed within the 'Action' genre in 2012, aiding evaluation of individual film impact on genre success.
+
+#### 7. Which genre has the highest revenue collection for the last 3 years?
+```sql
+SELECT a.genre, a.year, Max(RM)
+FROM   imdb_movies a
+       INNER JOIN (SELECT genre,
+                          year,
+                          Sum(revenue_millions) AS RM
+                   FROM   imdb_movies
+                   GROUP  BY 1,
+                             2) b
+               ON a.genre = b.genre 
+GROUP BY 1,2
+ORDER BY 2 desc,3 desc;
+```
+**Objective:** To identify the genre with the highest revenue collection over the last 3 years in order to inform strategic content production and investment decisions.
+#### 8. Find out the the director who has highest average rating of his/her movies.
+```sql
+SELECT director,
+       Max(ar)
+FROM   (SELECT director,
+               Avg(rating) AS AR
+        FROM   imdb_movies
+        GROUP  BY 1) a
+GROUP  BY 1
+ORDER  BY 2 DESC; 
+
+```
+**Objective:** To identify the director with the highest average rating of their movies, helping to recognize top-performing directors and inform future talent acquisition strategies.
+
+#### 9. How many movies have revenue greater than highest movie revenue of the ‘Adventure’ genre?
+
+```sql
+
+SELECT count(title)
+FROM imdb_movies
+WHERE Revenue_millions > ( SELECT max(revenue_millions) as RM
+						   FROM imdb_movies 
+                           WHERE Genre = 'Adventure');
+```
+**Objective:** To determine how many movies have revenue greater than the highest movie revenue in the ‘Adventure’ genre, helping identify top-grossing films.
+
+#### 10. How many movies have ratings greater than highest movie rating of the year 2015?
+
+```sql
+SELECT count(Title)
+FROM imdb_movies
+WHERE rating > ( SELECT Max(rating)
+				 FROM imdb_movies
+                 WHERE year = 2015);
+```
+**Objective:** To find how many movies have ratings higher than the highest rating in the year 2015, identifying exceptionally rated films in that period.
+
+#### 11. What is the minimum revenue corresponding to a movie such that its rating is higher than highest movie rating of the year 2015 and its revenue is greater than highest movie revenue of the ‘Comedy’ genre?
+
+```sql
+SELECT Min(revenue_millions)
+FROM   imdb_movies
+WHERE  rating > (SELECT Max(rating)
+                 FROM   imdb_movies
+                 WHERE  year = 2015)
+       AND revenue_millions > (SELECT Max(revenue_millions)
+                               FROM   imdb_movies
+                               WHERE  genre = 'Comedy'); 
+```
+**Objective:** To identify the minimum revenue for a movie that has a rating higher than the highest movie rating of 2015 and revenue greater than the highest revenue of the ‘Comedy’ genre for financial analysis.
+
+#### 12. How many movies contribute more than 10% of revenue to the total revenue of all movies in a year ?
+
+```sql
+SELECT *
+FROM   (SELECT title,
+               ( revenue_millions * 100 / rm ) AS pr
+        FROM   imdb_movies a
+               INNER JOIN (SELECT year,
+                                  Sum(revenue_millions) AS rm
+                           FROM   imdb_movies
+                           GROUP  BY 1) b
+                       ON a.year = b.year) a
+WHERE  pr > 10 ;
+```
+**Objective:** To calculate how many movies contribute more than 10% of the total revenue in a given year, highlighting major revenue-driving films.
+
+#### 13. How many movies contribute more than 5% of revenue to the total revenue of all movies in their respective genre?
+
+```sql
+SELECT Count(*)
+FROM   (SELECT title,
+               ( revenue_millions * 100 / rm ) AS pr
+        FROM   imdb_movies a
+               INNER JOIN (SELECT genre,
+                                  Sum(revenue_millions) AS rm
+                           FROM   imdb_movies
+                           GROUP  BY 1) b
+                       ON a.genre = b.genre) c
+WHERE  pr > 5; 
+```
+**Objective:** To find how many movies contribute more than 5% of revenue within their respective genre, aiding genre-specific performance insights.
+
+#### 14.
+
+```sql
+
+```
+**Objective:**
+
+#### 15.
+
+```sql
+
+```
+**Objective:**
+
+#### 16.
+
+```sql
+
+```
+**Objective:**
+
+#### 17.
+
+```sql
+
+```
+**Objective:**
+#### 18.
+
+```sql
+
+```
+**Objective:**
+#### 19.
+
+```sql
+
+```
+**Objective:**
+
