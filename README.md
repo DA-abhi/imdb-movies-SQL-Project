@@ -204,43 +204,180 @@ WHERE  pr > 5;
 ```
 **Objective:** To find how many movies contribute more than 5% of revenue within their respective genre, aiding genre-specific performance insights.
 
-#### 14.
+#### 14. How can we effectively identify and highlight the top-performing movies each year based on user ratings to enhance our platform's content discovery and recommendation features?
+
+```sql
+SELECT title,year,rating,Rank()
+			Over( Partition by year order by rating desc ) as ranks
+FROM imdb_movies;
+```
+**Objective:** The objective is clearly stated: identify the best movies of each year based on ratings.
+
+#### 15. How do we fix our annual movie ranking to accurately show the next best films after ties, and what is the rank of "Kung Fu Panda"?
+
+```sql
+SELECT title,
+       year,
+       rating,
+       ranks
+FROM   (SELECT title,
+               year,
+               rating,
+               Dense_rank()
+                 OVER(
+                   partition BY year
+                   ORDER BY rating DESC ) AS ranks
+        FROM   imdb_movies) a
+WHERE  title = 'Kung Fu Panda' ;
+```
+**Objective:**  It explicitly asks for the ability to determine the rank of a particular movie ("Kung Fu Panda").
+#### 16. Create a report where all the movies are ranked based on revenue in their respective genre. What is the rank of ‘Inception’ movie in its genre?
+
+```sql
+SELECT *
+FROM   (SELECT title,
+               genre,
+               Rank()
+                 OVER(
+                   partition BY genre
+                   ORDER BY revenue_millions DESC) AS ranks
+        FROM   imdb_movies) a
+WHERE  title = 'Inception' ;
+```
+**Objective:** the goal of creating a ranked report and the specific information sought (the rank of 'Inception'). It's concise and action-oriented.
+
+#### 17. Calculate the revenue contribution of movies towards the total revenue of respective genres
+
+```sql
+SELECT title,
+       genre,
+       revenue_millions,
+       total_genre_revenue,
+       Round(( revenue_millions * 100 / total_genre_revenue ), 2) AS percentage
+FROM   (SELECT title,
+               genre,
+               revenue_millions,
+               Sum(revenue_millions)
+                 OVER(
+                   partition BY genre) AS Total_genre_revenue
+        FROM   imdb_movies) a 
+```
+**Objective:** To Calculate the revenue contribution of movies towards the total revenue of respective genres.
+#### 18. Compute the percentage rating in terms of top rated movies in their respective genre.  What is the percentage rating of the movie ‘Blood Diamond’?
 
 ```sql
 
+SELECT title,
+       genre,
+       rating,
+       ( rating * 100 / max_genre_rating ) AS perc
+FROM   (SELECT title,
+               genre,
+               rating,
+               Max(rating)
+                 OVER(
+                   partition BY genre) AS max_genre_rating
+        FROM   imdb_movies) a
+WHERE  title = 'Blood diamond';
 ```
-**Objective:**
+**Objective:** To Find the percentage rating of the movie ‘Blood Diamond’.
 
-#### 15.
+#### 19. Calculate the cumulative revenue for the year. What is the cumulative revenue for “Iron Man 2” movie?
 
 ```sql
+SELECT id,
+       title,
+       year,
+       revenue_millions,
+       cumulative_revenue_year
+FROM   (SELECT id,
+               title,
+               year,
+               revenue_millions,
+               Sum(revenue_millions)
+                 OVER(
+                   partition BY year
+                   ORDER BY id) AS cumulative_revenue_year
+        FROM   imdb_movies
+        WHERE  revenue_millions IS NOT NULL) AS table1
+WHERE  title = 'Iron Man 2' ;
 
 ```
-**Objective:**
+**Objective:** To calculate cumulative revenue by year based and find the cumulative revenue for “Iron Man 2” movie.
 
-#### 16.
+
+#### 20. Management has defined the following revenue-based segmentation:
+* Blockbuster: Revenue ≥ 300 million
+* Superhit: Revenue between 200 and 299.99 million
+* Hit: Revenue between 100 and 199.99 million
+* Normal: Revenue < 100 million
+Find the first Blockbuster movie of each year. In the year 2014, Which movie was the first blockbuster?
 
 ```sql
-
+SELECT year,
+       title,
+       film_response,
+       First_value(title)
+         OVER(
+           partition BY year) AS "First_blockbuster_movie_year"
+FROM   (SELECT year,
+               title,
+               CASE
+                 WHEN revenue_millions >= 300 THEN "blockbuster"
+                 WHEN revenue_millions BETWEEN 200 AND 299.99 THEN "super hit"
+                 WHEN revenue_millions BETWEEN 100 AND 199.99 THEN "hit"
+                 ELSE "normal"
+               END AS "Film_response"
+        FROM   imdb_movies) a
+WHERE  film_response = 'Blockbuster'
+       AND year = 2014; 
 ```
-**Objective:**
+**Objective:** To find first Blockbuster movie of each year.
 
-#### 17.
+
+#### 21. Find the 5th Blockbuster movie of each year. Which year option does not have any 5th Blockbuster movie?
 
 ```sql
-
+SELECT *
+FROM (SELECT distinct year,
+       title,
+       film_response,
+       nth_value(title,5)
+         OVER(
+           partition BY year) AS "Fifth_blockbuster_movie_year"
+FROM   (SELECT year,
+               title,
+               CASE
+                 WHEN revenue_millions >= 300 THEN "blockbuster"
+                 WHEN revenue_millions BETWEEN 200 AND 299.99 THEN "super hit"
+                 WHEN revenue_millions BETWEEN 100 AND 199.99 THEN "hit"
+                 ELSE "normal"
+               END AS "Film_response"
+        FROM   imdb_movies) a
+WHERE  film_response = 'Blockbuster') a
+WHERE Fifth_blockbuster_movie_year is null;
 ```
-**Objective:**
-#### 18.
+**Objective:** Find the 5th Blockbuster movie of each year and Which year option does not have any 5th Blockbuster movie.
+
+
+#### 22. Find out the Year on Year growth of the movie revenue.
+* Calculate the YoY Growth for each year.
+* Which year had negative growth?
+* Which year had highest growth?
 
 ```sql
-
+SELECT year,
+       annual_revenue,
+       ( annual_revenue / Lag(annual_revenue, 1, NULL)
+                            OVER() - 1 ) * 100 AS "YOY_GROWTH"
+FROM   (SELECT year,
+               Sum(revenue_millions) AS Annual_revenue
+        FROM   imdb_movies
+        GROUP  BY 1
+        ORDER  BY 1) a; 
 ```
-**Objective:**
-#### 19.
+**Objective:** Find out the Year on Year growth of the movie revenue.
 
-```sql
 
-```
-**Objective:**
+
 
