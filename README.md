@@ -1,5 +1,14 @@
 # imdb-movies-SQL-Project
+## Overview
+This project involves a comprehensive analysis of imdb movies data using SQL. The goal is to extract valuable insights and answer various business questions based on the dataset. The following README provides a detailed account of the project's objectives, business problems, solutions, findings, and conclusions.
 
+## Objectives 
+* Revenue Analysis: Calculate individual and total revenues for movies, Derive metrics such as average revenue per movie, per genre, and per year.
+* Movie Categorization: Blockbuster, Super Hit, Hit, Normal , Use revenue and ratings thresholds to determine category placement.
+* Ratings Analysis
+* Genre and Year-wise Insights
+* Cumulative Revenue Tracking
+* YoY (Year-over-Year) and Growth Metrics:
 
 
 ##  Business Problem and Solutions
