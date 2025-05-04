@@ -11,6 +11,23 @@ This project involves a comprehensive analysis of imdb movies data using SQL. Th
 * Cumulative Revenue Tracking
 * YoY (Year-over-Year) and Growth Metrics
 
+  ## Dataset
+The data for this project is sourced from the IMDb dataset:
+* **Dataset Link:** [Movies Dataset](https://github.com/DA-abhi/imdb-movies-SQL-Project/blob/main/imdb_movies.csv)
+  ## Schema
+```sql
+CREATE TABLE `imdb_movies` (
+  `ID` int DEFAULT NULL,
+  `Title` text,
+  `Genre` text,
+  `Director` text,
+  `Year` int DEFAULT NULL,
+  `Runtime_minutes` int DEFAULT NULL,
+  `Rating` double DEFAULT NULL,
+  `Revenue_millions` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+```
+
 
 ##  Business Problem and Solutions
 #### 1. A company wants to classify its movie portfolio based on revenue performance to better understand historical trends and guide future investments. Management has defined the following revenue-based segmentation:
