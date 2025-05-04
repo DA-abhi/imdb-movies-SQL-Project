@@ -1,4 +1,4 @@
-# imdb-movies-SQL-Project
+# IMDb movies SQL-Project
 ![imdb logo](https://github.com/DA-abhi/imdb-movies-SQL-Project/blob/main/Imdb%20logo.png)
 ## Overview
 This project involves a comprehensive analysis of imdb movies data using SQL. The goal is to extract valuable insights and answer various business questions based on the dataset. The following README provides a detailed account of the project's objectives, business problems, solutions, findings, and conclusions.
@@ -70,7 +70,7 @@ FROM   (SELECT *,
 WHERE Ratings = 'Must Watch';
 ```
 **Objective:** To determine the total number of 'Must Watch' movies (rating ≥ 8) in the dataset for use in content recommendation and promotional strategy.
-#### 4. evaluate the financial performance of lower-rated movies (ratings < 7) to better understand their impact. Specifically, they aim to analyze total revenue by year and genre, and determine the total revenue of 'Drama' movies with ratings below 7 in 2016 to assess that genre’s underperforming content.
+#### 4. Evaluate the financial performance of lower-rated movies (ratings < 7) to better understand their impact. Specifically, they aim to analyze total revenue by year and genre, and determine the total revenue of 'Drama' movies with ratings below 7 in 2016 to assess that genre’s underperforming content.
 ```sql
 SELECT Genre, year,Sum(revenue_millions)
 FROM imdb_movies
@@ -388,6 +388,17 @@ FROM   (SELECT year,
 ```
 **Objective:** Find out the Year on Year growth of the movie revenue.
 
+#### Findings and Conclusion
+* High Revenue ≠ High Ratings: Some blockbusters lacked critical acclaim, while some highly rated films failed commercially—underscoring the need for balanced strategy.
 
+* Genre-Specific Investment Strategy: Focus marketing and production resources on Action, Sci-Fi, and Biopic genres based on revenue and ratings.
+
+* Leverage High ROI Genres: Low-budget genres like Horror and Comedy are great for high-margin returns.
+
+* Optimize Budgets: Avoid overinvestment in low-performing genres or non-franchise projects unless niche success is likely.
+
+* Categorization Helps Targeting: Classifying movies (Blockbuster, Hit, etc.) aids in forecasting and aligning promotional efforts.
+
+* Data-Driven Planning: Use past YoY growth and cumulative trends to set realistic business goals and measure performance.
 
 
